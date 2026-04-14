@@ -43,7 +43,8 @@
       "Bash(zip -r deploy.zip dist/ node_modules/)",
       "Bash(AWS_DEFAULT_REGION=us-east-1 aws logs tail /aws/lambda/ask-diriodobeb-default-default-1775661169112 --since 5m)",
       "Bash(npx tsc:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(aws cognito-idp:*)"
     ]
   }
 }
