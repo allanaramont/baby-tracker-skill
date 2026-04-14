@@ -39,6 +39,7 @@ export function cognitoAuthorizeUrl(redirectUri: string): string {
     response_type: 'code',
     scope: 'openid email profile',
     redirect_uri: redirectUri,
+    identity_provider: 'LoginWithAmazon',
   });
   return `${domain}/oauth2/authorize?${params}`;
 }
