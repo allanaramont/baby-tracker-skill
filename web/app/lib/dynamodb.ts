@@ -2,9 +2,15 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, GetCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
 import { EstadoBebe } from './types';
 
-const client = new DynamoDBClient({ region: process.env.AWS_REGION ?? 'us-east-1' });
+const client = new DynamoDBClient({
+  region: (process.env.AWS_REGION ?? 'us-east-1').trim(),
+  credentials: process.env.AWS_ACCESS_KEY_ID ? {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID.trim(),
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!.trim(),
+  } : undefined,
+});
 const docClient = DynamoDBDocumentClient.from(client);
-const TABLE = process.env.DYNAMODB_TABLE_NAME ?? 'baby-tracker-data';
+const TABLE = (process.env.DYNAMODB_TABLE_NAME ?? 'baby-tracker-data').trim();
 
 export function cognitoKey(sub: string): string {
   return `cognito:${sub}`;

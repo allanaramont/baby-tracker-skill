@@ -46,7 +46,16 @@ export default async function DashboardPage() {
   const sessao = await getSessao();
   if (!sessao) redirect('/login');
 
-  const estado = await lerEstado(sessao.sub);
+  let estado;
+  try {
+    estado = await lerEstado(sessao.sub);
+  } catch (err) {
+    console.error('Erro ao carregar dados:', err);
+    estado = {
+      ultimasMamadas: [], ultimasFraldas: [], ultimosSonos: [],
+      registrosPeso: [], ultimosRemedios: [],
+    };
+  }
 
   const hoje = new Date().toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });
   const inicioHoje = new Date(hoje.split('/').reverse().join('-') + 'T00:00:00-03:00').getTime();
