@@ -9,6 +9,7 @@ const navItems = [
   { href: '/sono', label: 'Sono', icon: '🌙' },
   { href: '/peso', label: 'Peso', icon: '⚖️' },
   { href: '/remedios', label: 'Remédios', icon: '💊' },
+  { href: '/como-usar', label: 'Guia', icon: '📖' },
 ];
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
