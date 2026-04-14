@@ -32,8 +32,8 @@ export async function getSessao(): Promise<SessionPayload | null> {
 }
 
 export function cognitoAuthorizeUrl(redirectUri: string): string {
-  const domain = process.env.COGNITO_DOMAIN!;
-  const clientId = process.env.COGNITO_CLIENT_ID!;
+  const domain = process.env.COGNITO_DOMAIN!.trim();
+  const clientId = process.env.COGNITO_CLIENT_ID!.trim();
   const params = new URLSearchParams({
     client_id: clientId,
     response_type: 'code',
@@ -45,9 +45,9 @@ export function cognitoAuthorizeUrl(redirectUri: string): string {
 }
 
 export async function trocarCodePorTokens(code: string, redirectUri: string) {
-  const domain = process.env.COGNITO_DOMAIN!;
-  const clientId = process.env.COGNITO_CLIENT_ID!;
-  const clientSecret = process.env.COGNITO_CLIENT_SECRET!;
+  const domain = process.env.COGNITO_DOMAIN!.trim();
+  const clientId = process.env.COGNITO_CLIENT_ID!.trim();
+  const clientSecret = process.env.COGNITO_CLIENT_SECRET!.trim();
   const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
 
   const res = await fetch(`${domain}/oauth2/token`, {
