@@ -1,0 +1,25 @@
+# Copie este arquivo para .env.local e preencha com os valores do setup.sh
+# Execute: cd infra && ./setup.sh SEU-DOMINIO https://sua-url.com
+
+# Cognito
+COGNITO_REGION=us-east-1
+COGNITO_USER_POOL_ID=us-east-1_XXXXXXXXX
+COGNITO_CLIENT_ID=XXXXXXXXXXXXXXXXXXXXXXXXXX
+COGNITO_CLIENT_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+COGNITO_DOMAIN=https://diario-do-bebe.auth.us-east-1.amazoncognito.com
+
+# Cognito - valores publicos (expostos ao browser)
+NEXT_PUBLIC_COGNITO_CLIENT_ID=XXXXXXXXXXXXXXXXXXXXXXXXXX
+NEXT_PUBLIC_COGNITO_DOMAIN=https://diario-do-bebe.auth.us-east-1.amazoncognito.com
+
+# Sessao (gere um valor aleatorio: openssl rand -hex 32)
+SESSION_SECRET=troque-por-valor-aleatorio-de-64-chars-hex
+
+# URL do web app
+NEXTAUTH_URL=https://babytracker.desenvbr.com
+
+# DynamoDB (mesma tabela usada pelo Lambda)
+AWS_REGION=us-east-1
+AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+DYNAMODB_TABLE_NAME=baby-tracker-data

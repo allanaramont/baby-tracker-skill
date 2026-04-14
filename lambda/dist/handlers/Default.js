@@ -3,11 +3,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ErrorHandler = exports.SessionEndedRequestHandler = exports.CancelAndStopIntentHandler = exports.FallbackIntentHandler = exports.HelpIntentHandler = exports.DefinirNomeBebeHandler = exports.LaunchRequestHandler = void 0;
 const apl_1 = require("../utils/apl");
 const tempo_1 = require("../utils/tempo");
+const auth_1 = require("../utils/auth");
 exports.LaunchRequestHandler = {
     canHandle(handlerInput) {
         return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
     },
     async handle(handlerInput) {
+        // Solicitar vinculacao de conta se ainda nao foi feita
+        if (!(0, auth_1.temContaVinculada)(handlerInput.requestEnvelope)) {
+            return handlerInput.responseBuilder
+                .speak('Para usar o Diário do Bebê, você precisa vincular sua conta. Por favor, abra o aplicativo Alexa e vincule sua conta na seção de skills.')
+                .withLinkAccountCard()
+                .getResponse();
+        }
         const attrManager = handlerInput.attributesManager;
         const estado = (await attrManager.getPersistentAttributes());
         if (!estado.nomeBebe) {

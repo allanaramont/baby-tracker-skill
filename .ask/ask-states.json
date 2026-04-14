@@ -4,8 +4,8 @@
     "default": {
       "deploymentStatus": "COMPLETE",
       "skillMetadata": {
-        "lastImportId": "amzn1.ask-package.import.1b394761-34e8-4f57-a2b3-7bd0b7566a47",
-        "lastImportTimestamp": "2026-04-14T13:30:25.775Z",
+        "lastImportId": "amzn1.ask-package.import.0d2c6efc-4894-4706-a9c1-bd02834355ee",
+        "lastImportTimestamp": "2026-04-14T18:41:02.746Z",
         "lastDeployHash": "kOk4Hp//wMtYfqJyJxV3M49gwO4=",
         "lastDeployType": "interaction-model"
       },
