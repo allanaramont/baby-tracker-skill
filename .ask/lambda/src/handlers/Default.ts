@@ -1,0 +1,175 @@
+import { HandlerInput, RequestHandler } from 'ask-sdk-core';
+import { EstadoSessao } from '../types';
+import { supportsAPL, criarHomeDashboardAPL } from '../utils/apl';
+import { tempoDecorrido, formatarFralda, formatarTempo } from '../utils/tempo';
+
+export const LaunchRequestHandler: RequestHandler = {
+  canHandle(handlerInput: HandlerInput) {
+    return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
+  },
+  async handle(handlerInput: HandlerInput) {
+    const attrManager = handlerInput.attributesManager;
+    const estado = (await attrManager.getPersistentAttributes()) as EstadoSessao;
+
+    if (!estado.nomeBebe) {
+      return handlerInput.responseBuilder
+        .speak('Bem-vindo ao Diário do Bebê! Para começar, diga: o nome é, seguido do nome do bebê.')
+        .reprompt('Diga: o nome é, seguido do nome do bebê.')
+        .withShouldEndSession(false)
+        .getResponse();
+    }
+
+    const speech = `Diário ${estado.nomeBebe} aberto. O que deseja registrar? Se quiser, diga ajuda.`;
+    const builder = handlerInput.responseBuilder
+      .speak(speech)
+      .reprompt('O que deseja registrar?')
+      .withShouldEndSession(false);
+
+    if (supportsAPL(handlerInput)) {
+      const ultimaMamada = estado.ultimasMamadas?.[0];
+      const ultimaFralda = estado.ultimasFraldas?.[0];
+      const ultimoSono = estado.ultimosSonos?.[0];
+
+      builder.addDirective(criarHomeDashboardAPL({
+        nome: estado.nomeBebe,
+        mamadaEmAndamento: estado.mamadaAtual?.emAndamento ?? false,
+        ultimaMamadaHaQuanto: estado.mamadaAtual?.emAndamento
+          ? tempoDecorrido(estado.mamadaAtual.iniciadaEm)
+          : ultimaMamada
+          ? tempoDecorrido(ultimaMamada.finalizadaEm ?? ultimaMamada.iniciadaEm)
+          : undefined,
+        ultimaMamadaDuracao: ultimaMamada?.duracaoMinutos != null
+          ? formatarTempo(ultimaMamada.duracaoMinutos)
+          : undefined,
+        ultimaFraldaHaQuanto: ultimaFralda ? tempoDecorrido(ultimaFralda.registradaEm) : undefined,
+        ultimaFraldaTipo: ultimaFralda ? formatarFralda(ultimaFralda.tipoBaixo) : undefined,
+        sonoEmAndamento: estado.sonoAtual?.emAndamento ?? false,
+        sonoHaQuanto: estado.sonoAtual?.emAndamento
+          ? tempoDecorrido(estado.sonoAtual.iniciadoEm)
+          : ultimoSono
+          ? tempoDecorrido(ultimoSono.finalizadoEm ?? ultimoSono.iniciadoEm)
+          : undefined,
+      }) as any);
+    }
+
+    return builder.getResponse();
+  },
+};
+
+export const DefinirNomeBebeHandler: RequestHandler = {
+  canHandle(handlerInput: HandlerInput) {
+    return (
+      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
+      handlerInput.requestEnvelope.request.intent.name === 'DefinirNomeBebe'
+    );
+  },
+  async handle(handlerInput: HandlerInput) {
+    const attrManager = handlerInput.attributesManager;
+    const estado = (await attrManager.getPersistentAttributes()) as EstadoSessao;
+
+    const intent = handlerInput.requestEnvelope.request as any;
+    const nome = intent.intent?.slots?.nomeBebe?.value as string | undefined;
+
+    if (!nome) {
+      return handlerInput.responseBuilder
+        .speak('Não entendi o nome. Tente dizer: o nome é, seguido do nome.')
+        .reprompt('Diga: o nome é, seguido do nome do bebê.')
+        .withShouldEndSession(false)
+        .getResponse();
+    }
+
+    const nomeFormatado = nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
+    const nomeAnterior = estado.nomeBebe;
+    estado.nomeBebe = nomeFormatado;
+    attrManager.setPersistentAttributes(estado);
+    await attrManager.savePersistentAttributes();
+
+    return handlerInput.responseBuilder
+      .speak(
+        nomeAnterior && nomeAnterior !== nomeFormatado
+          ? `Nome atualizado para ${nomeFormatado}. O que deseja registrar?`
+          : `Certo, vou chamar de ${nomeFormatado}. O que deseja registrar?`
+      )
+      .reprompt('O que deseja registrar?')
+      .withShouldEndSession(false)
+      .getResponse();
+  },
+};
+
+export const HelpIntentHandler: RequestHandler = {
+  canHandle(handlerInput: HandlerInput) {
+    return (
+      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
+      handlerInput.requestEnvelope.request.intent.name === 'AMAZON.HelpIntent'
+    );
+  },
+  handle(handlerInput: HandlerInput) {
+    const speech =
+      'Posso registrar amamentação, fralda, sono, peso e remédio. ' +
+      'Também posso te dizer a última amamentação, a última fralda e o resumo de hoje. ' +
+      'Também posso alterar o nome do bebê. O que deseja?';
+    return handlerInput.responseBuilder
+      .speak(speech)
+      .reprompt('O que deseja registrar?')
+      .withShouldEndSession(false)
+      .getResponse();
+  },
+};
+
+export const FallbackIntentHandler: RequestHandler = {
+  canHandle(handlerInput: HandlerInput) {
+    return (
+      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
+      handlerInput.requestEnvelope.request.intent.name === 'AMAZON.FallbackIntent'
+    );
+  },
+  handle(handlerInput: HandlerInput) {
+    return handlerInput.responseBuilder
+      .speak(
+        'Não entendi. Tente uma frase curta como: iniciar amamentação, trocar fralda de xixi, bebê acordou, ou resumo de hoje. Se quiser, diga ajuda.'
+      )
+      .reprompt('Tente dizer: iniciar amamentação, trocar fralda de cocô, ou diga ajuda.')
+      .withShouldEndSession(false)
+      .getResponse();
+  },
+};
+
+export const CancelAndStopIntentHandler: RequestHandler = {
+  canHandle(handlerInput: HandlerInput) {
+    return (
+      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
+      (handlerInput.requestEnvelope.request.intent.name === 'AMAZON.CancelIntent' ||
+        handlerInput.requestEnvelope.request.intent.name === 'AMAZON.StopIntent')
+    );
+  },
+  async handle(handlerInput: HandlerInput) {
+    const estado = (await handlerInput.attributesManager.getPersistentAttributes()) as EstadoSessao;
+    const nome = estado.nomeBebe ?? 'do bebê';
+    return handlerInput.responseBuilder
+      .speak(`Fechando diário ${nome}, até logo.`)
+      .getResponse();
+  },
+};
+
+export const SessionEndedRequestHandler: RequestHandler = {
+  canHandle(handlerInput: HandlerInput) {
+    return handlerInput.requestEnvelope.request.type === 'SessionEndedRequest';
+  },
+  handle(handlerInput: HandlerInput) {
+    return handlerInput.responseBuilder.getResponse();
+  },
+};
+
+export const ErrorHandler = {
+  canHandle() {
+    return true;
+  },
+  handle(handlerInput: HandlerInput, error: Error) {
+    console.error('Erro:', error.message);
+    return handlerInput.responseBuilder
+      .speak('Desculpe, ocorreu um erro. Tente novamente. Se quiser, diga ajuda.')
+      .reprompt('O que deseja registrar? Se quiser, diga ajuda.')
+      .withShouldEndSession(false)
+      .getResponse();
+  },
+};

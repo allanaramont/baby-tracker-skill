@@ -1,0 +1,32 @@
+{
+  "name": "baby-tracker-skill",
+  "version": "1.0.0",
+  "description": "Alexa Skill para acompanhamento de bebê recém-nascido",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "deploy": "npm run build && zip -r deploy.zip dist/ node_modules/ && AWS_DEFAULT_REGION=us-east-1 aws lambda update-function-code --function-name ask-diriodobeb-default-default-1775661169112 --zip-file fileb://deploy.zip",
+    "test": "jest --watchman=false",
+    "test:watch": "jest --watch --watchman=false"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testMatch": ["**/*.test.ts"],
+    "moduleFileExtensions": ["ts", "js"]
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.0.0",
+    "ask-sdk-core": "^2.14.0",
+    "ask-sdk-dynamodb-persistence-adapter": "^2.14.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^20.0.0",
+    "ask-sdk-model": "^1.29.0",
+    "jest": "^30.3.0",
+    "ts-jest": "^29.4.9",
+    "typescript": "^5.0.0"
+  }
+}

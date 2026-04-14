@@ -1,0 +1,474 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "diario do bebe",
+      "intents": [
+        {
+          "name": "DefinirNomeBebe",
+          "slots": [
+            {
+              "name": "nomeBebe",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "se chama {nomeBebe}",
+            "o nome é {nomeBebe}",
+            "o nome e {nomeBebe}",
+            "o bebê se chama {nomeBebe}",
+            "meu bebê se chama {nomeBebe}",
+            "pode chamar de {nomeBebe}",
+            "alterar nome para {nomeBebe}",
+            "trocar nome para {nomeBebe}",
+            "mudar nome para {nomeBebe}",
+            "o nome agora é {nomeBebe}"
+          ]
+        },
+        {
+          "name": "InformarLado",
+          "slots": [
+            {
+              "name": "lado",
+              "type": "LadoMamada"
+            }
+          ],
+          "samples": [
+            "{lado}",
+            "é o {lado}",
+            "peito {lado}",
+            "o {lado}",
+            "lado {lado}",
+            "no {lado}"
+          ]
+        },
+        {
+          "name": "IniciarAmamentacao",
+          "slots": [
+            {
+              "name": "lado",
+              "type": "LadoMamada"
+            }
+          ],
+          "samples": [
+            "iniciar amamentação",
+            "iniciar amamentação",
+            "começar amamentação",
+            "começar amamentação",
+            "amamentação iniciada",
+            "iniciar amamentação no {lado}",
+            "começar amamentação no {lado}",
+            "iniciar amamentação no {lado}",
+            "começar amamentação no {lado}",
+            "dar de mamar",
+            "dar de mamar no {lado}",
+            "começou a mamar",
+            "está mamando"
+          ]
+        },
+        {
+          "name": "FinalizarAmamentacao",
+          "slots": [
+            {
+              "name": "lado",
+              "type": "LadoMamada"
+            },
+            {
+              "name": "duracaoMinutos",
+              "type": "AMAZON.NUMBER"
+            }
+          ],
+          "samples": [
+            "finalizar amamentação",
+            "finalizar amamentação",
+            "terminar amamentação",
+            "terminar amamentação",
+            "amamentação finalizada",
+            "acabou a amamentação",
+            "terminou de mamar",
+            "parar amamentação",
+            "finalizar amamentação no {lado}",
+            "mamou no {lado} por {duracaoMinutos} minutos",
+            "mamou por {duracaoMinutos} minutos",
+            "mamou {duracaoMinutos} minutos"
+          ]
+        },
+        {
+          "name": "RegistrarMamadeira",
+          "slots": [],
+          "samples": [
+            "registrar mamadeira",
+            "mamadeira",
+            "deu mamadeira",
+            "tomou mamadeira",
+            "bebê tomou mamadeira",
+            "foi mamadeira"
+          ]
+        },
+        {
+          "name": "RegistrarMamadeiraAtrasada",
+          "slots": [],
+          "samples": [
+            "registrar mamadeira atrasada",
+            "mamadeira atrasada",
+            "deu mamadeira antes",
+            "tomou mamadeira antes",
+            "registrar mamadeira de antes"
+          ]
+        },
+        {
+          "name": "UltimaAmamentacao",
+          "slots": [],
+          "samples": [
+            "quando foi a última amamentação",
+            "quando foi a última amamentação",
+            "última amamentação",
+            "última amamentação",
+            "quando foi alimentado",
+            "faz quanto tempo que foi alimentado",
+            "há quanto tempo mamou"
+          ]
+        },
+        {
+          "name": "InformarInicioAtrasado",
+          "slots": [
+            {
+              "name": "duracao",
+              "type": "AMAZON.DURATION"
+            },
+            {
+              "name": "horario",
+              "type": "AMAZON.TIME"
+            }
+          ],
+          "samples": [
+            "há {duracao}",
+            "{duracao}",
+            "começou às {horario}",
+            "foi às {horario}",
+            "às {horario}"
+          ]
+        },
+        {
+          "name": "TrocarFralda",
+          "slots": [
+            {
+              "name": "tipoBaixo",
+              "type": "TipoFralda"
+            }
+          ],
+          "samples": [
+            "trocar fralda",
+            "trocou fralda",
+            "registrar troca de fralda",
+            "troca de fralda",
+            "fralda trocada",
+            "trocar fralda de {tipoBaixo}",
+            "trocou fralda de {tipoBaixo}",
+            "fralda com {tipoBaixo}",
+            "bebê fez {tipoBaixo}",
+            "teve fralda de {tipoBaixo}"
+          ]
+        },
+        {
+          "name": "InformarTipoFralda",
+          "slots": [
+            {
+              "name": "tipoBaixo",
+              "type": "TipoFralda"
+            }
+          ],
+          "samples": [
+            "{tipoBaixo}",
+            "foi {tipoBaixo}",
+            "teve {tipoBaixo}",
+            "era {tipoBaixo}",
+            "só {tipoBaixo}"
+          ]
+        },
+        {
+          "name": "UltimaFralda",
+          "slots": [],
+          "samples": [
+            "quando foi a última troca",
+            "última troca de fralda",
+            "quando trocou a fralda",
+            "faz quanto tempo que trocou a fralda",
+            "última fralda"
+          ]
+        },
+        {
+          "name": "IniciarSono",
+          "slots": [],
+          "samples": [
+            "bebê dormiu",
+            "dormiu",
+            "iniciar sono",
+            "iniciou sono",
+            "foi dormir",
+            "dormindo",
+            "começou a dormir",
+            "hora de dormir",
+            "está dormindo"
+          ]
+        },
+        {
+          "name": "FinalizarSono",
+          "slots": [],
+          "samples": [
+            "acordou",
+            "bebê acordou",
+            "finalizar sono",
+            "acordou agora",
+            "terminou de dormir",
+            "sono finalizado"
+          ]
+        },
+        {
+          "name": "RegistrarPeso",
+          "slots": [
+            {
+              "name": "quilos",
+              "type": "AMAZON.NUMBER"
+            },
+            {
+              "name": "gramos",
+              "type": "AMAZON.NUMBER"
+            }
+          ],
+          "samples": [
+            "registrar peso",
+            "anotar peso",
+            "registrar peso {quilos} quilos",
+            "registrar peso {quilos} quilos e {gramos} gramas",
+            "peso {quilos} quilos e {gramos} gramas",
+            "peso {quilos} quilos",
+            "o peso é {quilos} quilos e {gramos} gramas",
+            "o peso é {quilos} quilos"
+          ]
+        },
+        {
+          "name": "ResumoDoDia",
+          "slots": [],
+          "samples": [
+            "resumo de hoje",
+            "como foi o dia",
+            "resumo do dia",
+            "o que aconteceu hoje",
+            "relatório do dia",
+            "como está hoje"
+          ]
+        },
+        {
+          "name": "RegistrarRemedio",
+          "slots": [
+            {
+              "name": "nomeRemedio",
+              "type": "AMAZON.SearchQuery"
+            },
+            {
+              "name": "dose",
+              "type": "AMAZON.NUMBER"
+            },
+            {
+              "name": "unidadeDose",
+              "type": "UnidadeDose"
+            }
+          ],
+          "samples": [
+            "dar remédio {nomeRemedio}",
+            "registrar remédio {nomeRemedio}",
+            "dei remédio {nomeRemedio}"
+          ]
+        },
+        {
+          "name": "UltimoRemedio",
+          "slots": [
+            {
+              "name": "nomeRemedio",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "último remédio",
+            "quando foi o último remédio",
+            "quando dei remédio",
+            "último {nomeRemedio}",
+            "quando dei {nomeRemedio}",
+            "quando foi o {nomeRemedio}"
+          ]
+        },
+        {
+          "name": "AMAZON.HelpIntent"
+        },
+        {
+          "name": "AMAZON.YesIntent"
+        },
+        {
+          "name": "AMAZON.NoIntent"
+        },
+        {
+          "name": "AMAZON.FallbackIntent"
+        },
+        {
+          "name": "AMAZON.CancelIntent"
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": [
+            "fechar",
+            "encerrar"
+          ]
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent"
+        }
+      ],
+      "types": [
+        {
+          "name": "LadoMamada",
+          "values": [
+            {
+              "id": "esquerdo",
+              "name": {
+                "value": "esquerdo",
+                "synonyms": [
+                  "peito esquerdo",
+                  "lado esquerdo",
+                  "esquerda"
+                ]
+              }
+            },
+            {
+              "id": "direito",
+              "name": {
+                "value": "direito",
+                "synonyms": [
+                  "peito direito",
+                  "lado direito",
+                  "direita"
+                ]
+              }
+            },
+            {
+              "id": "ambos",
+              "name": {
+                "value": "ambos",
+                "synonyms": [
+                  "os dois",
+                  "ambos os lados",
+                  "os dois peitos",
+                  "dois"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TipoFralda",
+          "values": [
+            {
+              "id": "xixi",
+              "name": {
+                "value": "xixi",
+                "synonyms": [
+                  "só xixi",
+                  "apenas xixi",
+                  "urina",
+                  "mijou",
+                  "mijo"
+                ]
+              }
+            },
+            {
+              "id": "coco",
+              "name": {
+                "value": "cocô",
+                "synonyms": [
+                  "cocô",
+                  "coco",
+                  "fezes",
+                  "fez cocô",
+                  "evacuou"
+                ]
+              }
+            },
+            {
+              "id": "os_dois",
+              "name": {
+                "value": "os dois",
+                "synonyms": [
+                  "xixi e cocô",
+                  "cocô e xixi",
+                  "os dois",
+                  "tudo",
+                  "ambos"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "UnidadeDose",
+          "values": [
+            {
+              "id": "ml",
+              "name": {
+                "value": "mililitros",
+                "synonyms": [
+                  "ml",
+                  "mililitro",
+                  "mililitros",
+                  "mL"
+                ]
+              }
+            },
+            {
+              "id": "mg",
+              "name": {
+                "value": "miligramas",
+                "synonyms": [
+                  "mg",
+                  "miligrama",
+                  "miligramas"
+                ]
+              }
+            },
+            {
+              "id": "gotas",
+              "name": {
+                "value": "gotas",
+                "synonyms": [
+                  "gota",
+                  "gotas"
+                ]
+              }
+            },
+            {
+              "id": "comprimido",
+              "name": {
+                "value": "comprimido",
+                "synonyms": [
+                  "comprimido",
+                  "comprimidos",
+                  "cp"
+                ]
+              }
+            },
+            {
+              "id": "sachê",
+              "name": {
+                "value": "sachê",
+                "synonyms": [
+                  "sachê",
+                  "sache",
+                  "sachês"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "prompts": []
+  }
+}

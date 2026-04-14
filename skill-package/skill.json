@@ -1,0 +1,61 @@
+{
+  "manifest": {
+    "publishingInformation": {
+      "locales": {
+        "pt-BR": {
+          "name": "Diário do Bebê",
+          "summary": "Acompanhe amamentações, fraldas, sono e peso do seu bebê.",
+          "description": "Registre e consulte amamentações (com lado e duração), trocas de fralda (xixi ou cocô), períodos de sono e peso do bebê. Obtenha resumos do dia para acompanhar o desenvolvimento e ter informações prontas para o pediatra.",
+          "examplePhrases": [
+            "Alexa, abrir diario do bebe",
+            "Alexa, pedir ao diario do bebe para trocar fralda",
+            "Alexa, pedir ao diario do bebe resumo de hoje"
+          ],
+          "keywords": [
+            "bebê",
+            "recém-nascido",
+            "amamentação",
+            "amamentação",
+            "fralda",
+            "sono"
+          ],
+          "smallIconUri": "https://baby-tracker-skill-icons.s3.amazonaws.com/icon_108.png",
+          "largeIconUri": "https://baby-tracker-skill-icons.s3.amazonaws.com/icon_512.png"
+        }
+      },
+      "isAvailableWorldwide": false,
+      "testingInstructions": "Skill para rastreamento de bebê recém-nascido.",
+      "category": "HEALTH_TRACKERS_AND_REMINDERS",
+      "distributionCountries": [
+        "BR"
+      ]
+    },
+    "apis": {
+      "custom": {
+        "interfaces": [
+          {
+            "type": "ALEXA_PRESENTATION_APL"
+          }
+        ],
+        "endpoint": {
+          "uri": "arn:aws:lambda:us-east-1:220719768017:function:ask-diriodobeb-default-default-1775661169112"
+        }
+      }
+    },
+    "accountLinking": {
+      "accountLinkingType": "AUTH_CODE",
+      "authorizationUrl": "https://diario-do-bebe.auth.us-east-1.amazoncognito.com/oauth2/authorize",
+      "accessTokenUrl": "https://diario-do-bebe.auth.us-east-1.amazoncognito.com/oauth2/token",
+      "clientId": "SUBSTITUA_PELO_CLIENT_ID_DO_COGNITO",
+      "clientSecret": "SUBSTITUA_PELO_CLIENT_SECRET_DO_COGNITO",
+      "scopes": [
+        "openid",
+        "email",
+        "profile"
+      ],
+      "accessTokenScheme": "HTTP_BASIC",
+      "defaultTokenExpirationInSeconds": 3600
+    },
+    "manifestVersion": "1.0"
+  }
+}

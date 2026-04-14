@@ -1,0 +1,117 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Cognito User Pool para Diario do Bebe - autenticacao web + Account Linking Alexa
+
+Parameters:
+  DomainPrefix:
+    Type: String
+    Default: diario-do-bebe
+    Description: Prefixo do dominio Cognito (deve ser globalmente unico)
+  WebAppUrl:
+    Type: String
+    Default: http://localhost:3000
+    Description: "URL do web app (ex: https://meuapp.vercel.app)"
+
+Resources:
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: diario-do-bebe-pool
+      UsernameAttributes:
+        - email
+      AutoVerifiedAttributes:
+        - email
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireUppercase: false
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: false
+      Schema:
+        - Name: email
+          AttributeDataType: String
+          Required: true
+          Mutable: true
+        - Name: name
+          AttributeDataType: String
+          Required: false
+          Mutable: true
+      EmailConfiguration:
+        EmailSendingAccount: COGNITO_DEFAULT
+      UserPoolTags:
+        Project: diario-do-bebe
+
+  UserPoolDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      Domain: !Ref DomainPrefix
+      UserPoolId: !Ref UserPool
+
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: diario-do-bebe-client
+      UserPoolId: !Ref UserPool
+      GenerateSecret: true
+      # Fluxos suportados
+      ExplicitAuthFlows:
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+      # OAuth 2.0 para Account Linking Alexa + web app
+      AllowedOAuthFlows:
+        - code
+      AllowedOAuthFlowsUserPoolClient: true
+      AllowedOAuthScopes:
+        - openid
+        - email
+        - profile
+      # URLs de callback - web app + Alexa Account Linking
+      CallbackURLs:
+        - !Sub '${WebAppUrl}/api/auth/callback'
+        - 'https://pitangui.amazon.com/api/skill/link/M3U9YPFLXBWM5J'
+        - 'https://layla.amazon.com/api/skill/link/M3U9YPFLXBWM5J'
+        - 'https://alexa.amazon.co.jp/api/skill/link/M3U9YPFLXBWM5J'
+      LogoutURLs:
+        - !Sub '${WebAppUrl}/login'
+      SupportedIdentityProviders:
+        - COGNITO
+      # Sem rotacao de token de refresh por padrao
+      RefreshTokenValidity: 30
+      AccessTokenValidity: 1
+      IdTokenValidity: 1
+      TokenValidityUnits:
+        RefreshToken: days
+        AccessToken: hours
+        IdToken: hours
+      PreventUserExistenceErrors: ENABLED
+
+Outputs:
+  UserPoolId:
+    Description: ID do Cognito User Pool
+    Value: !Ref UserPool
+    Export:
+      Name: DiarioBebe-UserPoolId
+
+  UserPoolClientId:
+    Description: ID do App Client
+    Value: !Ref UserPoolClient
+    Export:
+      Name: DiarioBebe-UserPoolClientId
+
+  CognitoDomain:
+    Description: Dominio do Cognito Hosted UI
+    Value: !Sub 'https://${DomainPrefix}.auth.${AWS::Region}.amazoncognito.com'
+    Export:
+      Name: DiarioBebe-CognitoDomain
+
+  AuthorizeUrl:
+    Description: URL de autorizacao OAuth (para skill.json accountLinking)
+    Value: !Sub 'https://${DomainPrefix}.auth.${AWS::Region}.amazoncognito.com/oauth2/authorize'
+
+  TokenUrl:
+    Description: URL de token OAuth (para skill.json accountLinking)
+    Value: !Sub 'https://${DomainPrefix}.auth.${AWS::Region}.amazoncognito.com/oauth2/token'
+
+  Region:
+    Description: Regiao AWS
+    Value: !Ref AWS::Region

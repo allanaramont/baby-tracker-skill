@@ -1,0 +1,29 @@
+{
+  "askToolkitVersion": "2.x",
+  "profiles": {
+    "default": {
+      "skillMetadata": {
+        "src": "./skill-package"
+      },
+      "code": {
+        "default": {
+          "src": "./lambda",
+          "buildFlow": "npm-cli.js"
+        }
+      },
+      "skillInfrastructure": {
+        "type": "@ask-cli/lambda-deployer",
+        "userConfig": {
+          "runtime": "nodejs18.x",
+          "handler": "dist/index.handler",
+          "templateParameters": {
+            "bucketName": "",
+            "bucketKey": "",
+            "countryCode": ""
+          },
+          "awsRegion": "us-east-1"
+        }
+      }
+    }
+  }
+}
