@@ -31,26 +31,24 @@ export async function getSessao(): Promise<SessionPayload | null> {
   return verificarSessao(token);
 }
 
-export function cognitoAuthorizeUrl(redirectUri: string): string {
-  const domain = process.env.COGNITO_DOMAIN!.trim();
-  const clientId = process.env.COGNITO_CLIENT_ID!.trim();
+function lwaClientId() { return process.env.LWA_CLIENT_ID!.trim(); }
+function lwaClientSecret() { return process.env.LWA_CLIENT_SECRET!.trim(); }
+function appUrl() { return process.env.NEXTAUTH_URL!.trim(); }
+
+export function lwaAuthorizeUrl(): string {
   const params = new URLSearchParams({
-    client_id: clientId,
+    client_id: lwaClientId(),
     response_type: 'code',
-    scope: 'openid email profile',
-    redirect_uri: redirectUri,
-    identity_provider: 'LoginWithAmazon',
+    scope: 'profile',
+    redirect_uri: `${appUrl()}/api/auth/callback`,
   });
-  return `${domain}/oauth2/authorize?${params}`;
+  return `https://www.amazon.com/ap/oa?${params}`;
 }
 
-export async function trocarCodePorTokens(code: string, redirectUri: string) {
-  const domain = process.env.COGNITO_DOMAIN!.trim();
-  const clientId = process.env.COGNITO_CLIENT_ID!.trim();
-  const clientSecret = process.env.COGNITO_CLIENT_SECRET!.trim();
-  const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+export async function trocarCodePorTokens(code: string) {
+  const credentials = Buffer.from(`${lwaClientId()}:${lwaClientSecret()}`).toString('base64');
 
-  const res = await fetch(`${domain}/oauth2/token`, {
+  const res = await fetch('https://api.amazon.com/auth/o2/token', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -59,30 +57,30 @@ export async function trocarCodePorTokens(code: string, redirectUri: string) {
     body: new URLSearchParams({
       grant_type: 'authorization_code',
       code,
-      redirect_uri: redirectUri,
+      redirect_uri: `${appUrl()}/api/auth/callback`,
     }),
   });
 
   if (!res.ok) {
     const err = await res.text();
-    throw new Error(`Falha ao trocar codigo por tokens: ${err}`);
+    throw new Error(`Falha ao trocar tokens: ${err}`);
   }
 
-  return res.json() as Promise<{
-    id_token: string;
-    access_token: string;
-    refresh_token: string;
-    expires_in: number;
-  }>;
+  return res.json() as Promise<{ access_token: string; refresh_token: string; expires_in: number }>;
 }
 
-export function decodificarIdToken(idToken: string): SessionPayload {
-  const parts = idToken.split('.');
-  const payload = JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf-8'));
+export async function obterPerfilAmazon(accessToken: string): Promise<SessionPayload> {
+  const res = await fetch('https://api.amazon.com/user/profile', {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  if (!res.ok) throw new Error('Falha ao obter perfil Amazon');
+
+  const profile = await res.json() as { user_id: string; email: string; name: string };
   return {
-    sub: payload.sub,
-    email: payload.email,
-    name: payload.name ?? payload['cognito:username'],
+    sub: profile.user_id,
+    email: profile.email,
+    name: profile.name,
   };
 }
 

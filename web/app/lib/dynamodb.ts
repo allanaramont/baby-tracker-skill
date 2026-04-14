@@ -12,13 +12,13 @@ const client = new DynamoDBClient({
 const docClient = DynamoDBDocumentClient.from(client);
 const TABLE = (process.env.DYNAMODB_TABLE_NAME ?? 'baby-tracker-data').trim();
 
-export function cognitoKey(sub: string): string {
-  return `cognito:${sub}`;
+export function amazonKey(userId: string): string {
+  return `amazon:${userId}`;
 }
 
 export async function lerEstado(sub: string): Promise<EstadoBebe> {
   const result = await docClient.send(
-    new GetCommand({ TableName: TABLE, Key: { id: cognitoKey(sub) } })
+    new GetCommand({ TableName: TABLE, Key: { id: amazonKey(sub) } })
   );
 
   const vazio: EstadoBebe = {
@@ -39,7 +39,7 @@ export async function salvarEstado(sub: string, estado: EstadoBebe): Promise<voi
   await docClient.send(
     new PutCommand({
       TableName: TABLE,
-      Item: { id: cognitoKey(sub), attributes: estado },
+      Item: { id: amazonKey(sub), attributes: estado },
     })
   );
 }

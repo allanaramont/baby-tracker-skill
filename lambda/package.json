@@ -13,11 +13,17 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
-    "testMatch": ["**/*.test.ts"],
-    "moduleFileExtensions": ["ts", "js"]
+    "testMatch": [
+      "**/*.test.ts"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ]
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.0.0",
+    "@aws-sdk/lib-dynamodb": "^3.1030.0",
     "ask-sdk-core": "^2.14.0",
     "ask-sdk-dynamodb-persistence-adapter": "^2.14.0"
   },

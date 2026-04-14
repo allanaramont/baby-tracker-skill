@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
-import { cognitoAuthorizeUrl } from '../../../lib/auth';
+import { lwaAuthorizeUrl } from '../../../lib/auth';
 
 export async function GET() {
-  const redirectUri = `${process.env.NEXTAUTH_URL?.trim()}/api/auth/callback`;
-  const url = cognitoAuthorizeUrl(redirectUri);
-  return NextResponse.redirect(url);
+  return NextResponse.redirect(lwaAuthorizeUrl());
 }

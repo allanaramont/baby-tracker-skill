@@ -1,6 +1,5 @@
 import * as Alexa from 'ask-sdk-core';
-import { DynamoDbPersistenceAdapter } from 'ask-sdk-dynamodb-persistence-adapter';
-import { extrairUserId } from './utils/auth';
+import { AmazonPersistenceAdapter } from './persistence/AmazonAdapter';
 
 import { LaunchRequestHandler, DefinirNomeBebeHandler, HelpIntentHandler, FallbackIntentHandler, CancelAndStopIntentHandler, SessionEndedRequestHandler, ErrorHandler } from './handlers/Default';
 import { IniciarMamadaHandler, InformarLadoHandler } from './handlers/IniciarMamada';
@@ -14,12 +13,9 @@ import { RegistrarPesoHandler } from './handlers/RegistrarPeso';
 import { ResumoDoDiaHandler } from './handlers/ResumoDoDia';
 import { RegistrarRemedioHandler, UltimoRemedioHandler } from './handlers/Remedio';
 
-const persistenceAdapter = new DynamoDbPersistenceAdapter({
-  tableName: process.env.DYNAMODB_TABLE ?? 'baby-tracker-data',
-  createTable: true,
-  // Usa Cognito sub quando o usuario vinculou a conta, senao usa Alexa userId
-  partitionKeyGenerator: (requestEnvelope) => extrairUserId(requestEnvelope),
-});
+const persistenceAdapter = new AmazonPersistenceAdapter(
+  process.env.DYNAMODB_TABLE ?? 'baby-tracker-data'
+);
 
 export const handler = Alexa.SkillBuilders.custom()
   .addRequestHandlers(
