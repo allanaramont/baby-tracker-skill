@@ -30,8 +30,10 @@ export async function GET(request: Request) {
 
     return NextResponse.redirect(`${process.env.NEXTAUTH_URL!.trim()}/dashboard`);
   } catch (err) {
-    console.error('Erro no callback OAuth:', err);
-    const baseUrl = process.env.NEXTAUTH_URL ?? origin;
-    return NextResponse.redirect(`${process.env.NEXTAUTH_URL!.trim()}/login?error=callback_falhou`);
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error('Erro no callback OAuth:', msg);
+    return NextResponse.redirect(
+      `${process.env.NEXTAUTH_URL!.trim()}/login?error=${encodeURIComponent(msg)}`
+    );
   }
 }
