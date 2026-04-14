@@ -12,7 +12,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const baseUrl = process.env.NEXTAUTH_URL ?? origin;
+    const baseUrl = process.env.NEXTAUTH_URL!;
     const redirectUri = `${baseUrl}/api/auth/callback`;
 
     const tokens = await trocarCodePorTokens(code, redirectUri);
@@ -28,10 +28,10 @@ export async function GET(request: Request) {
       path: '/',
     });
 
-    return NextResponse.redirect(`${baseUrl}/dashboard`);
+    return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/dashboard`);
   } catch (err) {
     console.error('Erro no callback OAuth:', err);
     const baseUrl = process.env.NEXTAUTH_URL ?? origin;
-    return NextResponse.redirect(`${baseUrl}/login?error=callback_falhou`);
+    return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/login?error=callback_falhou`);
   }
 }
