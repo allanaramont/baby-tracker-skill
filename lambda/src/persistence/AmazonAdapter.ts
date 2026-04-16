@@ -4,7 +4,9 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, GetCommand, PutCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
 
 const client = new DynamoDBClient({ region: process.env.AWS_REGION ?? 'us-east-1' });
-const docClient = DynamoDBDocumentClient.from(client);
+const docClient = DynamoDBDocumentClient.from(client, {
+  marshallOptions: { removeUndefinedValues: true },
+});
 
 async function resolverUserId(requestEnvelope: RequestEnvelope): Promise<string> {
   const accessToken = (requestEnvelope as any)?.session?.user?.accessToken as string | undefined;

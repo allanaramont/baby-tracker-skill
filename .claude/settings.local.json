@@ -4,7 +4,17 @@
       "Bash(git stash:*)",
       "Bash(git add:*)",
       "Bash(git commit -m \"chore: add .claude/ to gitignore:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(npm run:*)",
+      "Bash(npx next:*)",
+      "Bash(vercel logs:*)",
+      "Bash(npx vercel:*)",
+      "Bash(ask --version)",
+      "Bash(ask simulate:*)",
+      "Bash(ask smapi:*)",
+      "Bash(SKILL_ID=\"amzn1.ask.skill.3ad747a8-c04e-44ad-bb74-7bd2fd299f99\")",
+      "Bash(SIM_ID=\"01982fb8-2afd-4118-8721-caca50b5960a\")",
+      "Bash(AWS_DEFAULT_REGION=us-east-1 aws logs describe-log-groups \\\\\n  --log-group-name-prefix \"/aws/lambda/ask-diriodobeb\" \\\\\n  --query 'logGroups[*].logGroupName' --output text 2>&1)"
     ]
   }
 }
