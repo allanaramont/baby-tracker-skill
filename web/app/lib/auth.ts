@@ -35,12 +35,16 @@ function lwaClientId() { return process.env.LWA_CLIENT_ID!.trim(); }
 function lwaClientSecret() { return process.env.LWA_CLIENT_SECRET!.trim(); }
 function appUrl() { return process.env.NEXTAUTH_URL!.trim(); }
 
+export function lwaRedirectUri(): string {
+  return (process.env.LWA_REDIRECT_URI?.trim() || `${appUrl()}/api/auth/callback`);
+}
+
 export function lwaAuthorizeUrl(): string {
   const params = new URLSearchParams({
     client_id: lwaClientId(),
     response_type: 'code',
     scope: 'profile',
-    redirect_uri: `${appUrl()}/api/auth/callback`,
+    redirect_uri: lwaRedirectUri(),
   });
   return `https://www.amazon.com/ap/oa?${params}`;
 }
@@ -57,7 +61,7 @@ export async function trocarCodePorTokens(code: string) {
     body: new URLSearchParams({
       grant_type: 'authorization_code',
       code,
-      redirect_uri: `${appUrl()}/api/auth/callback`,
+      redirect_uri: lwaRedirectUri(),
     }),
   });
 
@@ -77,6 +81,7 @@ export async function obterPerfilAmazon(accessToken: string): Promise<SessionPay
   if (!res.ok) throw new Error('Falha ao obter perfil Amazon');
 
   const profile = await res.json() as { user_id: string; email: string; name: string };
+
   return {
     sub: profile.user_id,
     email: profile.email,
