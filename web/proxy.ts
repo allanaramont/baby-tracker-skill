@@ -2,12 +2,16 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { verificarSessao, SESSION_COOKIE_NAME } from './app/lib/auth';
 
-const ROTAS_PUBLICAS = ['/login', '/api/auth', '/api/debug'];
+const ROTAS_PUBLICAS_EXATAS = ['/'];
+const ROTAS_PUBLICAS_PREFIXO = ['/login', '/termos', '/privacidade', '/api/auth', '/api/debug'];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const isPublica = ROTAS_PUBLICAS.some((r) => pathname.startsWith(r));
+  const isPublica =
+    ROTAS_PUBLICAS_EXATAS.includes(pathname) ||
+    ROTAS_PUBLICAS_PREFIXO.some((r) => pathname.startsWith(r));
+
   if (isPublica || pathname.startsWith('/_next') || pathname.includes('.')) {
     return NextResponse.next();
   }
